@@ -4,7 +4,7 @@ from database import connect_db
 from flask_jwt_extended import get_jwt_identity
 
 # User Registration Route
-def register():
+def register(bcrypt):
     data = request.get_json()
     print("Data is received:", data)
     username = data.get('username') 

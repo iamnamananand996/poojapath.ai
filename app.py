@@ -5,6 +5,7 @@ from user import register, login, book_priest
 from flask_jwt_extended import jwt_required
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 app = Flask(__name__)
 app.config['JWT_SECRET_KEY'] = 'supersecretkey'  # Change this in production
@@ -18,9 +19,12 @@ def home():
     return "Welcome to the PoojaPath!"
 
 
-@app.route('/api/priests',methods=["GET"])
-# Function to fetch and display priests
+@app.route('/api/priests', methods=["GET"])
+@jwt_required()  # Requires a valid JWT token
 def fetch_priests():
+    current_user = get_jwt_identity()  # Get user identity from the token
+    print(f"User {current_user} is accessing the priests list.")  # Log the user identity
+
     conn = connect_db()
     cur = conn.cursor()
 
@@ -29,8 +33,8 @@ def fetch_priests():
 
     cur.close()
     conn.close()
-    print(" This is a sucessful attempt")
-    return jsonify([{"id": p[0], "name": p[1], "experience": p[2], "age": p[3]} for p in priests])
+
+    return jsonify([{"id": p[0], "current_user" : current_user, "name": p[1], "experience": p[2], "age": p[3]} for p in priests])
     
     
 @app.route('/api/add-initial-data',methods=["POST"])
@@ -57,7 +61,7 @@ def get_available_priests():
 
 @app.route('/api/register', methods=['POST'])
 def register_user():
-    return register()
+    return register(bcrypt)
     
     
 @app.route('/api/login', methods=['POST'])
