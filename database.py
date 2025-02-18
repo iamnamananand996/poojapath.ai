@@ -5,7 +5,7 @@ def connect_db():
     return psycopg2.connect(
         dbname="pooja_path",
         user="postgres",
-        password="newpassword",
+        password="ZlaBest@1043",
         host="localhost",
         port="5432"
     )
