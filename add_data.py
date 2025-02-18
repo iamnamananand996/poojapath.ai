@@ -10,7 +10,7 @@ def add_priests():
 
     if count == 0:  # Insert only if no data is present
         cur.execute("""
-            INSERT INTO priests (id, name, experience, age, availability) 
+            INSERT INTO priests (name, experience, age, availability) 
             VALUES 
             ('Medhansh Acharya', '7 years', '35 years', TRUE),
             ('Pankaj Jha', '4 years', '40 years', FALSE),
@@ -24,4 +24,23 @@ def add_priests():
 
     cur.close()
     conn.close()
+    
+    return "Data added successfully!"
+
+def create_users_table():
+    conn = connect_db()
+    cur = conn.cursor()
+
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS users (
+            id SERIAL PRIMARY KEY,
+            username TEXT UNIQUE NOT NULL,
+            password TEXT NOT NULL
+        )
+    """)
+
+    conn.commit()
+    cur.close()
+    conn.close()
+    return "Users table created successfully!"
 
