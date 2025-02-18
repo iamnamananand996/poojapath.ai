@@ -39,11 +39,11 @@ def login(bcrypt):
     user = cur.fetchone()
 
     if user and bcrypt.check_password_hash(user[1], password):
-        access_token = create_access_token(identity=user[0])
+        # Convert user ID to string to avoid 422 error
+        access_token = create_access_token(identity=str(user[0]))  
         return jsonify({"access_token": access_token}), 200
     else:
         return jsonify({"error": "Invalid credentials"}), 401
-
 
 def book_priest():
     user_id = get_jwt_identity()  # Get user ID from JWT
